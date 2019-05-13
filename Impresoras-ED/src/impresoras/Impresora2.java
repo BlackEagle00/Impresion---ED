@@ -27,31 +27,32 @@ public class Impresora2 extends Thread
 				case 1://Sencillo 
 					System.out.println("Tipo de Trabajo: " + tipo_documento +"\n"+
 							           "Departamento de Trabajo: " + departamento +"\n"+ 
-							           "Impresora: 2");
-					Thread.sleep(60000);
+							           "Impresora: 2\n");
+					Thread.sleep(60000);  //Tiempo: 1 minuto
 					System.out.println("Tipo de Trabajo: " + tipo_documento +"\n"+
 					          		   "Departamento de Trabajo: " + departamento +"\n"+ 
-					          		   "Impresora: 2");
+					          		   "Ha terminado su tiempo de impresión\n");
 					break;
 					
 				case 2://Informe 
 					System.out.println("Tipo de Trabajo: " + tipo_documento +"\n"+
 					           		   "Departamento de Trabajo: " + departamento +"\n"+ 
-					                   "Impresora: 2");
-					Thread.sleep(180000);
+					                   "Impresora: 2\n");
+					Thread.sleep(180000); //Tiempo: 3 minutos
 					System.out.println("Tipo de Trabajo: " + tipo_documento +"\n"+
 			          		           "Departamento de Trabajo: " + departamento +"\n"+ 
-			          		           "Impresora: 2");
+			          		           "Ha terminado su tiempo de impresión\n");
+					break;
 					
 				case 3://Catalogo
 					System.out.println("Tipo de Trabajo: " + tipo_documento +"\n"+
 					                   "Departamento de Trabajo: " + departamento +"\n"+ 
-					                   "Impresora: 2");
-					Thread.sleep(300000);
+					                   "Impresora: 2\n");
+					Thread.sleep(300000); //Tiempo: 5 minutos
 					System.out.println("Tipo de Trabajo: " + tipo_documento +"\n"+
 			          		           "Departamento de Trabajo: " + departamento +"\n"+ 
-			          		           "Impresora: 2");
-					
+			          		           "Ha terminado su tiempo de impresión\n");
+					break;
 				}
 			}
 			catch(Exception ex) 
