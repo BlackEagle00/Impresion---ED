@@ -1,6 +1,8 @@
 package main;
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Stack;
+
 import impresoras.Impresora1;
 import impresoras.Impresora2;
 /**
@@ -12,8 +14,8 @@ public class Main
 {  
     private static Thread  hilo1  = new  Impresora1(); //Creación cola de impresión 1
     private static Thread  hilo2  = new  Impresora2(); //Creación cola de impresión 2
-    private static LinkedList<String> cola1 = new LinkedList<String>();
-    private static LinkedList<String> cola2 = new LinkedList<String>();
+    private static Stack <String> cola1 = new Stack <>();
+    private static Stack <String> cola2 = new Stack <>();
     private static File archivo = null;
     private static FileReader fr = null;
     private static BufferedReader br = null;
@@ -35,33 +37,96 @@ public class Main
         	{
         		temporal_archivo = renglon.split(" "); //Renglón, separarlo por espacio
         		
-				if(temporal_archivo [0].equalsIgnoreCase("ADMON") || temporal_archivo [0].equalsIgnoreCase("GERENCIA")) 
+				if(temporal_archivo [0].equalsIgnoreCase("ADMON") || temporal_archivo [0].equalsIgnoreCase("GERENCIA")) // Departamentos Impresora 1
 				{
-					switch(Integer.parseInt(temporal_archivo[1]))
+					if (temporal_archivo [0].equalsIgnoreCase("GERENCIA")) //Condicional de la prioridad de Gerencia
 					{
-						case 1:
-							tiempo_colaImp1++; //Tiempo acumulado de cola: 1 minuto 
-							break;
-							
-						case 2:
-							tiempo_colaImp1+=3; //Tiempo acumulado de cola: 3 minutos
-							break;
-							
-						case 3:
-							tiempo_colaImp1+=5; //Tiempo acumulado de cola: 5 minutos
-							break;
+						if (tiempo_colaImp1 > 5) //Verificación de tiempo Impresora 1
+						{
+							if (tiempo_colaImp1 <= tiempo_colaImp2) //Comparación de tiempos de las 2 colas 
+							{
+								switch(Integer.parseInt(temporal_archivo[1]))
+								{
+									case 1:
+										tiempo_colaImp1+=1; //Tiempo acumulado de cola: 1 minuto 
+										break;
+										
+									case 2:
+										tiempo_colaImp1+=3; //Tiempo acumulado de cola: 3 minutos
+										break;
+										
+									case 3:
+										tiempo_colaImp1+=5; //Tiempo acumulado de cola: 5 minutos
+										break;
+								}
+							}
+							else 
+							{
+								cola2.push(renglon);
+								switch(Integer.parseInt(temporal_archivo[1]))
+								{
+									case 1:
+										tiempo_colaImp1+=1; //Tiempo acumulado de cola: 1 minuto 
+										break;
+										
+									case 2:
+										tiempo_colaImp1+=3; //Tiempo acumulado de cola: 3 minutos
+										break;
+										
+									case 3:
+										tiempo_colaImp1+=5; //Tiempo acumulado de cola: 5 minutos
+										break;
+								}
+							}
+						} 
+					
+						else //Tiempo de la cola < 5 minutos
+						{
+							cola1.push(renglon);
+							switch(Integer.parseInt(temporal_archivo[1]))
+							{
+								case 1:
+									tiempo_colaImp1+=1; //Tiempo acumulado de cola: 1 minuto 
+									break;
+									
+								case 2:
+									tiempo_colaImp1+=3; //Tiempo acumulado de cola: 3 minutos
+									break;
+									
+								case 3:
+									tiempo_colaImp1+=5; //Tiempo acumulado de cola: 5 minutos
+									break;
+							}
+						}	
 					}
-					cola1.add(renglon);
-				}
-       
-				else 
-				{
-					if(temporal_archivo [0].equalsIgnoreCase("MERCADEO") || temporal_archivo [0].equalsIgnoreCase("PRODUC"))
+					else //Documento de Administración
 					{
+						cola1.push(renglon);
 						switch(Integer.parseInt(temporal_archivo[1]))
 						{
 							case 1:
-								tiempo_colaImp2++; //Tiempo acumulado de cola: 1 minuto 
+								tiempo_colaImp1+=1; //Tiempo acumulado de cola: 1 minuto 
+								break;
+								
+							case 2:
+								tiempo_colaImp1+=3; //Tiempo acumulado de cola: 3 minutos
+								break;
+								
+							case 3:
+								tiempo_colaImp1+=5; //Tiempo acumulado de cola: 5 minutos
+								break;
+						}
+					}
+				}
+				else 
+				{
+					if(temporal_archivo [0].equalsIgnoreCase("MERCADEO") || temporal_archivo [0].equalsIgnoreCase("PRODUC")) // Departamentos Impresora 2
+					{
+						cola2.push(renglon);
+						switch(Integer.parseInt(temporal_archivo[1]))
+						{
+							case 1:
+								tiempo_colaImp2+=1; //Tiempo acumulado de cola: 1 minuto 
 								break;
 								
 							case 2:
@@ -71,21 +136,12 @@ public class Main
 							case 3:
 								tiempo_colaImp2+=5; //Tiempo acumulado de cola: 5 minutos
 								break;
-						}
-						if(cola2.size() > 2) //Límite de archivos de la cola 2 = 2 Archivos
-						{
-							System.out.println("Cola de impresión 2, llena. Por favor, espere a que termine de imprimirse un archivo");
-						}
-						else
-						{
-							cola2.add(renglon);//Añadimos el renglón, a la cola de la impresora
-						}
-						
+						}						
 					}
 				}
 			}
 
-			
+        	System.out.println("Código realizado por: Andrés Guillermo Bonilla Olarte");
 			System.out.println("Bienvenido al Administrador de Impresiones MinuTech");
 			System.out.println("Departamentos:\n"
 							 + "1. Administración\n"
@@ -95,18 +151,17 @@ public class Main
 			System.out.println("\nCola de Impresora 1: " + cola1 +"\n"
 							   + "Cola de Impresora 2: " + cola2 + "\n");
 			
-        	
+        	Thread.sleep(5000);
         	Impresora1.setQueue(cola1);
 			Impresora2.setQueue(cola2);
 			
 			hilo1.start();
 			hilo2.start();
-			
-				
+					
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }       
+	    catch (Exception e)
+	    {
+	        e.printStackTrace();
+	    } 
     }
 }
